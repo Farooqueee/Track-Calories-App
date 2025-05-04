@@ -113,15 +113,63 @@ class Workout {
   }
 }
 
-const tracker = new CalorieTracker();
+class App {
+  constructor() {
+    this._tracker = new CalorieTracker();
+    document
+      .getElementById("meal-form")
+      .addEventListener("submit", this._newMeal.bind(this));
 
-const breakFast = new Meal("Breakfast", 400);
+    document
+      .getElementById("workout-form")
+      .addEventListener("submit", this._newWorkout.bind(this));
+  }
 
-tracker.addMeal(breakFast);
+  _newMeal(e) {
+    e.preventDefault();
 
-const run = new Workout("Running", 320);
-tracker.addWorkout(run);
+    const name = document.getElementById("meal-name");
+    const calories = document.getElementById("meal-calories");
 
-console.log(tracker._meals);
-console.log(tracker._workouts);
-console.log(tracker._totalCalories);
+    // Here we are checking the input fields and doing validation
+    if (name.value === " " || calories.value === "") {
+      alert("Please fill all the fields");
+      return;
+    }
+
+    const meal = new Meal(name.value, +calories.value);
+    this._tracker.addMeal(meal);
+
+    name.value = "";
+    calories.value = "";
+
+    const collapseMeal = document.getElementById("collapse-meal");
+    const bsCollapse = new bootstrap.Collapse(collapseMeal, {
+      toggle: true,
+    });
+  }
+  _newWorkout(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("workout-name");
+    const calories = document.getElementById("workout-calories");
+
+    // Here we are checking the input fields and doing validation
+    if (name.value === " " || calories.value === "") {
+      alert("Please fill all the fields");
+      return;
+    }
+
+    const workout = new Workout(name.value, +calories.value);
+    this._tracker.addWorkout(workout);
+
+    name.value = "";
+    calories.value = "";
+
+    const collapseWorkout = document.getElementById("collapse-workout");
+    const bsCollapse = new bootstrap.Collapse(collapseWorkout, {
+      toggle: true,
+    });
+  }
+}
+const app = new App();
